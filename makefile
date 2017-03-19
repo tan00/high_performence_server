@@ -3,6 +3,8 @@ INCL = -I ./include
 PROLIBDIR = ../obj/
 OSSPEC = -m64
 
+LIBDIR = ./lib/
+
 DEFINES = -O1 $(OSSPEC)  $(INCL)
 .SUFFIXES:.cpp.o
 
@@ -12,11 +14,12 @@ DEFINES = -O1 $(OSSPEC)  $(INCL)
 objs=demo.o
 
 
+
 all:makeall
 
 
 
 makeall:$(objs)
-	$(CC) -o  main  $(objs)   -lpthread 
+	$(CC) -o  main  $(objs)  $(LIBDIR)libapue.a  -lpthread 
 
      

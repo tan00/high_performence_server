@@ -1,0 +1,21 @@
+CC = g++
+INCL = -I ../include 
+PROLIBDIR = ../obj/
+OSSPEC = -m64
+
+DEFINES = -O1 $(OSSPEC)  $(INCL)
+.SUFFIXES:.c.o
+
+.c.o:
+	$(CC) $(DEFINES)  -c $*.c
+
+objs=error.o
+
+
+all:makeall
+
+
+
+makeall:$(objs)
+	ar -rv  libapue.a  $(objs)
+	
