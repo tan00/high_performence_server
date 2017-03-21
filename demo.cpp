@@ -12,6 +12,9 @@ int main()
     err_msg("sizof sig = [%d]" ,sizeof(SIGTERM));
     log_msg("test log_msg");
 
+
+    
+
     
     return 0;
 }
