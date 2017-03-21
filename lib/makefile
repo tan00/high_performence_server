@@ -3,7 +3,7 @@ INCL = -I ../include
 PROLIBDIR = ../obj/
 OSSPEC = -m64
 
-DEFINES = -O1 $(OSSPEC)  $(INCL)
+DEFINES = -Wall -O1 $(OSSPEC)  $(INCL)
 .SUFFIXES:.c.o
 
 .c.o:
@@ -18,4 +18,10 @@ all:makeall
 
 makeall:$(objs)
 	ar -rv  libapue.a  $(objs)
+
+
+.PHONY:.clean
+clean:
+	rm *.o 
+
 	

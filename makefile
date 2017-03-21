@@ -5,7 +5,7 @@ OSSPEC = -m64
 
 LIBDIR = ./lib/
 
-DEFINES = -O1 $(OSSPEC)  $(INCL)
+DEFINES = -Wall -O1 $(OSSPEC)  $(INCL)
 .SUFFIXES:.cpp.o
 
 .cpp.o:
