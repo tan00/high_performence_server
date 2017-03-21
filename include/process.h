@@ -47,7 +47,7 @@ static void sig_handler(int signum)
 {
     int save_errno = errno;
     int msg = signum;
-    if (send(sig_pipefd[1], (char *)&msg, 1, 0) != 1)
+    if (send(sig_pipefd[1], (char *)&msg, sizeof(SIGKILL) , 0) != 1)  //errno in the book   arg2 is 1 
         err_msg("in sig_handler send! errno=[%d]", errno);
     errno = save_errno;
 }
@@ -213,11 +213,12 @@ void processpool<T>::run_parent()
         {
             int sockfd = events[i].data.fd;
 
+            //new connect
             if( sockfd == m_listenfd )
             {
                 int i = sub_process_counter;
                 do{
-                    if(m_sub_process[i].pid != -1)
+                    if(m_sub_process[i].m_pid != -1)
                         break;
                     i = (i+1)%m_process_number;
                 }
@@ -230,10 +231,17 @@ void processpool<T>::run_parent()
                 }
                 sub_process_counter = (i+1)%m_process_number;
                 //sub_process_counter = i;
-                send( m_sub_process[i].m_pipefd[0] , &new_conn ,sizeof(new_conn) );
-                
+                if( 1 != send( m_sub_process[i].m_pipefd[0] , &new_conn ,sizeof(new_conn) ,0) )
+                    err_msg("in run_parent  send  return not 1");        
+            }
+            //signal from child process
+            else if( (sockfd == sig_pipefd[0]) && ( events[i].events&EPOLLIN)  )
+            {
+                //int sig
+
 
             }
+
         }
 
     }
