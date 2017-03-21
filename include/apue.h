@@ -43,6 +43,11 @@ typedef	void	Sigfunc(int);	/* for signal handlers */
 #define	min(a,b)	((a) < (b) ? (a) : (b))
 #define	max(a,b)	((a) > (b) ? (a) : (b))
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
 /*
  * Prototypes for our own functions.
  */
@@ -129,5 +134,10 @@ void	TELL_PARENT(pid_t);
 void	TELL_CHILD(pid_t);
 void	WAIT_PARENT(void);
 void	WAIT_CHILD(void);
+
+
+#ifdef __cplusplus
+}
+#endif 
 
 #endif	/* _APUE_H */
