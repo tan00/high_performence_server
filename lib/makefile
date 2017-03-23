@@ -9,7 +9,8 @@ DEFINES = -Wall -O1 $(OSSPEC)  $(INCL)
 .c.o:
 	$(CC) $(DEFINES)  -c $*.c
 
-objs=error.o
+objs=error.o\
+     errorlog.o
 
 
 all:makeall
