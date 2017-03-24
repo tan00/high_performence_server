@@ -318,13 +318,53 @@ void processpool< T >::run_child()
             int sockfd = events[i].data.fd;
 
             //new connection    accept it
-            if( (pipefd==sockfd) && ( events[i].event&EPOLLIN ) )
+            if( (sockfd==pipefd) && ( events[i].event&EPOLLIN ) )
             {
                 char client = 0;
                 ret = recv( sockfd ,(char*)&client , sizeof(client) , 0 );
+                if( ( ret<0 && errno!=EAGAIN ) || ret==0   )
+                {
+                    continue;
+                }                    
+                else if( ret==1 )
+                {
+                    if( client!=1 )
+                    {
+                        err_msg("new connection  but recv tag != 1");
+                        continue;
+                    }
+                    struct sockaddr_in client_address;
+                    socklen_t client_addrlength = sizeof( client_address );
+                    int connfd = accept( m_listenfd, ( struct sockaddr* )&client_address, &client_addrlength );
+                    if ( connfd < 0 )
+                    {
+                        err_msg( "in run_child accept() err  errno is: %d\n", errno );
+                        continue;
+                    }
+                    addfd( m_epollfd, connfd );
+                    users[connfd].init( m_epollfd, connfd, client_address );         
+                }
+            }
+            // recv signal from self
+            else if( ( sockfd == sig_pipefd[0] ) && ( events[i].events & EPOLLIN ))
+            {
+                int sig;
+                ret = recv(sig_pipefd[0] , &sig , sizeof(sig) , 0);
+                if(ret<0)
+                {
+                    err_msg( "in run_child recv() err  errno is: %d\n", errno );
+                    continue;
+                }
 
-
-
+            }
+            //child recive data from connfd    
+            else if( events[i].events & EPOLLIN )
+            {
+                 users[sockfd].process();
+            }
+            else
+            {
+                continue;
             }
         }  
 
