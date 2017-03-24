@@ -280,8 +280,58 @@ void processpool<T>::run_parent()
                     }
                 }
             }
+            else{
+                continue;
+            }
         }
     }
+
+    close(m_epollfd);
 }
+
+
+
+template< typename T >
+void processpool< T >::run_child()
+{
+    set_sig_pipe();
+
+    int pipefd = m_sub_process[m_idx].m_pipefd[1];
+    addfd(m_epollfd, pipefd);
+
+    epoll_event events[MAX_EVENT_NUMBER];
+    T *users = new T[USER_PER_PROCESS];
+    assert( users != NULL );
+
+    int number = 0;
+    int ret = -1;
+
+    while( !m_stop )
+    {
+        number = epoll_wait( m_epollfd , events , MAX_EVENT_NUMBER , -1 );
+        if( (number<0) && (errno!=EINTR) )
+        {
+            err_sys("in  run_child() epoll_wait err");
+        }
+        for(int i=0; i<number ; i++)
+        {
+            int sockfd = events[i].data.fd;
+
+            //new connection    accept it
+            if( (pipefd==sockfd) && ( events[i].event&EPOLLIN ) )
+            {
+                char client = 0;
+                ret = recv( sockfd ,(char*)&client , sizeof(client) , 0 );
+
+
+
+            }
+        }  
+
+    }
+
+
+}
+
 
 #endif
