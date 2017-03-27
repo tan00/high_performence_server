@@ -16,6 +16,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "apue.h"
 
 static int sig_pipefd[2];
 
@@ -318,7 +319,7 @@ void processpool< T >::run_child()
             int sockfd = events[i].data.fd;
 
             //new connection    accept it
-            if( (sockfd==pipefd) && ( events[i].event&EPOLLIN ) )
+            if( (sockfd==pipefd) && ( events[i].events&EPOLLIN ) )
             {
                 char client = 0;
                 ret = recv( sockfd ,(char*)&client , sizeof(client) , 0 );
