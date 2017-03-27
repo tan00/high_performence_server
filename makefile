@@ -11,7 +11,8 @@ DEFINES = -Wall -O1 $(OSSPEC)  $(INCL)
 .cpp.o:
 	$(CC) $(DEFINES)  -c $*.cpp
 
-objs=demo.o
+objs=demo.o\
+http_conn.o
 
 
 

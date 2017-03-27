@@ -19,7 +19,7 @@
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
+                "databaseFilename": "."
             }
         },
         {
